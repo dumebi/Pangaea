@@ -17,7 +17,6 @@
     "heroku": "git push heroku master",
     "git": "func() { git add . && git commit -m \"BUILD - $1\" && git push origin HEAD; }; func",
     "test": "NODE_ENV=development nyc mocha test/*.spec.js --timeout 120000 --reporter spec --exit --full-trace"
-    
   },
   "devDependencies": {
     "chai": "^4.2.0",
@@ -31,7 +30,7 @@
   "dependencies": {
     "@hapi/joi": "^16.1.7",
     "amqplib": "^0.5.3",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "bcryptjs": "^2.4.3",
     "bunyan": "^1.8.12",
     "chai": "^4.2.0",
@@ -55,6 +54,7 @@
     "morgan": "~1.9.0",
     "nodemon": "^1.18.10",
     "nyc": "^13.3.0",
+    "p-queue": "^6.6.2",
     "redis": "^2.8.0",
     "redis-await": "^1.0.6",
     "serve-static": "^1.13.2",

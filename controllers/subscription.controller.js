@@ -3,8 +3,9 @@ const HttpStatus = require('http-status-codes');
 const {
   handleError, handleSuccess, config
 } = require('../utils/utils');
-const publisher = require('../utils/rabbitmq');
-
+const { default: PQueue } = require('p-queue');
+const queue = new PQueue();
+const axios = require('axios').default;
 const QuestionController = {
   /**
    * Create Subscription
@@ -39,8 +40,13 @@ const QuestionController = {
     try {
       const { topic } = req.params
 
-      const subscription = await SubscribeModel.findOne({ topic })
-      
+      const subscriptions = await SubscribeModel.findOne({ topic })
+
+      for (let index = 0; index < subscriptions.length; index++) {
+        const subscription = subscriptions[index];
+        await queue.add(() =>  axios.post(subscription.url, req.body));
+      }
+      await queue.onIdle();
       return handleSuccess(req, res, HttpStatus.CREATED, 'Subscription created successfully', {url, body})
     } catch (error) {
       handleError(req, res, HttpStatus.INTERNAL_SERVER_ERROR, 'Could not create subscription', error)
