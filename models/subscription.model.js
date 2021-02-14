@@ -5,7 +5,7 @@ const SubscribeSchema = new Schema(
       type: Schema.Types.String,
       required: true
     },
-    user: { 
+    topic: { 
       type: Schema.Types.String,
       required: true
     },

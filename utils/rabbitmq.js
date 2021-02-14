@@ -1,5 +1,5 @@
 const amqp = require('amqplib');
-const HttpStatus = require('./status')
+const HttpStatus = require("http-status-codes")
 
 const RabbitMQ = {
   connection: '',
@@ -7,7 +7,7 @@ const RabbitMQ = {
   async init(amqp_url) {
     if (this.connection) return true; // prevents us from carelessly creating multiple AMQP connections in our app.
 
-    if (!amqp_url) throw new Error(HttpStatus.NO_AMPQ_URL_ERROR);
+    if (!amqp_url) throw new Error(HttpStatus.NOT_FOUND);
 
     // set connection heartbeat to 60
     const connectionUrl = `${amqp_url}?heartbeat=60`;
@@ -22,7 +22,7 @@ const RabbitMQ = {
   },
 
   isEventBusInitialized() {
-    if (!this.connection || !this.channel) throw new Error(HttpStatus.INIT_EVENTBUS_ERROR);
+    if (!this.connection || !this.channel) throw new Error(HttpStatus.NOT_IMPLEMENTED);
   },
 
   async close() {

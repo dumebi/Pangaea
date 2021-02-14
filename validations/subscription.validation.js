@@ -9,10 +9,24 @@ exports.validate_create_subscription = async (req, res, next) => {
     const schema = Joi.object().keys({
       url: Joi.string().required().label("Subscriber url")
     })
-    await schema.validate(req.body);
+    const validate =  await schema.validate(req.body);
+    if (validate.error) throw validate.error;
     next()
   } catch (error) {
-    return handleError(req, res, HttpStatus.PRECONDITION_FAILED, error.details, null)
+    console.log(error)
+    return handleError(req, res, HttpStatus.PRECONDITION_FAILED, error.details[0].message, null)
+  }
+}
+
+exports.validate_create_publishing = async (req, res, next) => {
+  try {
+    const schema = Joi.object()
+    const validate =  await schema.validate(req.body);
+    if (validate.error) throw validate.error;
+    next()
+  } catch (error) {
+    console.log(error)
+    return handleError(req, res, HttpStatus.PRECONDITION_FAILED, error.details[0].message, null)
   }
 }
 
@@ -21,9 +35,11 @@ exports.validate_topic_param = async (req, res, next) => {
     const schema = Joi.object().keys({
       topic: Joi.string().required().label("Subscription topic"),
     })
-    await schema.validate(req.params);
+    const validate = await schema.validate(req.params);
+    if (validate.error) throw validate.error;
     next()
   } catch (error) {
-    return handleError(req, res, HttpStatus.PRECONDITION_FAILED, error.details, null)
+    console.log(error)
+    return handleError(req, res, HttpStatus.PRECONDITION_FAILED, error.details[0].message, null)
   }
 }

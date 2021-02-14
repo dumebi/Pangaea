@@ -41,7 +41,7 @@ services:
       - .:/app
       - /app/node_modules
     env_file:
-     - ./compose.env
+     - ./.env
     links:
       - rabbitmq
     depends_on:

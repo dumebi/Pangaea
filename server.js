@@ -2,20 +2,14 @@
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const logger = require('./Publisher/utils/logger');
-const { handleError } = require('./Publisher/utils/utils')
+const { handleError } = require('./utils/utils')
 const cors = require('cors');
 const compression = require('compression');
-const flash = require('connect-flash');
-const {
-  logRequest
-} = require('./utils/middleware');
-
 const app = express();
 require('dotenv').config();
-require('./Publisher/utils/connection').mongo();
-require('./Publisher/utils/connection').rabbitmq();
-require('./Publisher/utils/connection').subscribe();
+require('./utils/connection').mongo();
+// require('./Publisher/utils/connection').rabbitmq();
+// require('./Publisher/utils/connection').subscribe();
 // require('./utils/connection').socket();
 
 // redis-server --maxmemory 10mb --maxmemory-policy allkeys-lru

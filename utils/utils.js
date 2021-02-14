@@ -1,8 +1,6 @@
-const nodemailer = require('nodemailer')
+// const nodemailer = require('nodemailer')
 const jwt = require('jsonwebtoken')
 const Constants = require('http-status-codes')
-const UserModel = require('../models/user.model')
-const logger = require('./logger')
 require('dotenv').config();
 
 exports.config = {
@@ -23,8 +21,6 @@ if (process.env.NODE_ENV === 'development') {
   this.config.amqp_url = process.env.AMQP_URL
   this.config.port = `${process.env.PORT}`
 } else {
-  this.config.mongo = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@ds241895.mlab.com:41895/heroku_q2r42jlg`
-  this.config.host = `https://backend-softcom.herokuapp.com/v1/`
   this.config.db = 'backend_test'
   this.config.amqp_url = `${process.env.CLOUDAMQP_URL}`
   this.config.port = `${process.env.PORT}`
@@ -33,42 +29,42 @@ if (process.env.NODE_ENV === 'development') {
 
 console.log(this.config)
 
-exports.sendMail = (params, callback) => {
-  const email = params.email;
-  // let from_email = params.from_email;
-  const body = params.body;
-  const subject = params.subject;
-  if (email == null || body == null || subject == null) {
-    return {
-      status: 'failed',
-      err: 'the required parameters were not supplied'
-    };
-  }
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    service: 'Gmail',
-    auth: {
-      user: process.env.MAIL_USER,
-      pass: process.env.MAIL_PASS
-    }
-  });
+// exports.sendMail = (params, callback) => {
+//   const email = params.email;
+//   // let from_email = params.from_email;
+//   const body = params.body;
+//   const subject = params.subject;
+//   if (email == null || body == null || subject == null) {
+//     return {
+//       status: 'failed',
+//       err: 'the required parameters were not supplied'
+//     };
+//   }
+//   const transporter = nodemailer.createTransport({
+//     host: 'smtp.gmail.com',
+//     port: 465,
+//     service: 'Gmail',
+//     auth: {
+//       user: process.env.MAIL_USER,
+//       pass: process.env.MAIL_PASS
+//     }
+//   });
 
-  const mailOptions = {
-    from: 'Stackoverflow Support <support@stackoverflowclone.com>',
-    to: email,
-    subject,
-    html: body
-  };
+//   const mailOptions = {
+//     from: 'Stackoverflow Support <support@stackoverflowclone.com>',
+//     to: email,
+//     subject,
+//     html: body
+//   };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      callback(error, null);
-    } else {
-      callback(error, info.response);
-    }
-  });
-};
+//   transporter.sendMail(mailOptions, (error, info) => {
+//     if (error) {
+//       callback(error, null);
+//     } else {
+//       callback(error, info.response);
+//     }
+//   });
+// };
 
 /**
  * Generate random numbers
@@ -159,20 +155,13 @@ exports.createJWT = (email, id) => {
 }
 
 exports.handleError = (req, res, code, message, err) => {
-  // if (res.headerSent) console.log('Headers have been set already')
-  // if (res.headersSent) return logger.error(err);
-  // logger.logAPIError(req, res, err);
-  console.log("error here: %o", err)
-  console.log(message)
   return res.status(parseInt(code, 10)).json({
     status: 'failed',
     message,
-    // err
   })
 }
 
 exports.handleSuccess = (req, res, code, message, data) => {
-  // logger.logAPIResponse(req, res);
   return res.status(parseInt(code, 10)).json({
     status: 'success',
     message: message,

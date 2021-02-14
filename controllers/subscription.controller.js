@@ -6,7 +6,7 @@ const {
 const { default: PQueue } = require('p-queue');
 const queue = new PQueue();
 const axios = require('axios').default;
-const QuestionController = {
+const SubscriptionController = {
   /**
    * Create Subscription
    * @description Create a subscription
@@ -19,11 +19,11 @@ const QuestionController = {
       const { url } = req.body
       const { topic } = req.params
 
-      const subscription = await SubscribeModel.create({
+      await SubscribeModel.create({
         url,
         topic
       })
-      return handleSuccess(req, res, HttpStatus.CREATED, 'Subscription created successfully', {url, body})
+      return handleSuccess(req, res, HttpStatus.CREATED, 'Subscription created successfully', {url, topic})
     } catch (error) {
       handleError(req, res, HttpStatus.INTERNAL_SERVER_ERROR, 'Could not create subscription', error)
     }
@@ -47,11 +47,11 @@ const QuestionController = {
         await queue.add(() =>  axios.post(subscription.url, req.body));
       }
       await queue.onIdle();
-      return handleSuccess(req, res, HttpStatus.CREATED, 'Subscription created successfully', {url, body})
+      return handleSuccess(req, res, HttpStatus.CREATED, 'data published successfully', {topic, data: req.body})
     } catch (error) {
-      handleError(req, res, HttpStatus.INTERNAL_SERVER_ERROR, 'Could not create subscription', error)
+      handleError(req, res, HttpStatus.INTERNAL_SERVER_ERROR, 'Could not publish data', error)
     }
   },
 };
 
-module.exports = QuestionController;
+module.exports = SubscriptionController;
